@@ -1,0 +1,10 @@
+SELECT id_employee, E.name, ifnull(A.chuagiao,0) DONCHUAGIAO, ifnull(B.hoantat,0) DONHOANTAT, ifnull((ifnull(A.chuagiao,0) + ifnull(B.hoantat,0)),0) TONGSODON
+FROM division_detail DV
+LEFT JOIN employee E ON E.id = DV.id_employee
+
+LEFT JOIN (SELECT id_shipper, COUNT(id_shipper) chuagiao FROM orders WHERE status=1 OR status=2 GROUP BY id_shipper) A ON A.id_shipper = DV.id_employee
+
+LEFT JOIN (SELECT id_shipper, COUNT(id_shipper) hoantat FROM orders WHERE status=3 GROUP BY id_shipper) B ON B.id_shipper = DV.id_employee
+
+WHERE district_code = maquan COLLATE utf8_unicode_ci 
+ORDER BY A.chuagiao ASC, TONGSODON ASC, B.hoantat ASC

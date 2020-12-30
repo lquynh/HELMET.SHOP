@@ -1,0 +1,5 @@
+SELECT od.product_code,p.name, sum(od.quantity_out) AS SLB
+		FROM orders_detail od, orders o, products p 
+		WHERE od.id_order=o.id AND p.product_code = od.product_code AND o.status != '4' AND DATE(o.created_at) >= ngaybatdau AND DATE(o.created_at)<=ngayketthuc
+		GROUP BY od.product_code 
+		ORDER BY od.product_code

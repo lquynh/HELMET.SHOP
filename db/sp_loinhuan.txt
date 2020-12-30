@@ -1,0 +1,12 @@
+SELECT P.product_code, P.name, ifnull(SL,0) TSL, ifnull(XTB,0) DGXTB, ifnull(NTB,0) DGNTB, ifnull(X.SL*(X.XTB - L.NTB),0) LN
+FROM products P
+INNER JOIN (select IDT.product_code PI, ROUND((SUM(ifnull(IDT.price,0)*ifnull(IDT.quantity_in,0))/ SUM(ifnull(IDT.quantity_in,1))),2) NTB 
+           FROM import_detail IDT WHERE import_code in 
+           (select import_code from import AS I where DATE(I.created_at) <= ngaybatdau )
+           GROUP BY IDT.product_code) L on P.product_code = PI
+           
+LEFT JOIN (select OD.product_code PC, ROUND((sUM(ifnull(OD.price,0)*ifnull(OD.quantity_out,0))/ SUM(ifnull(quantity_out,1))),2) XTB , SUM(ifnull(OD.quantity_out,0)) SL 
+           FROM orders_detail OD WHERE id_order in 
+           (select id from orders AS O where O.status != '4' AND DATE(O.created_at) <= ngaybatdau )
+           GROUP BY OD.product_code) X on  P.product_code = PC
+           ORDER BY product_code

@@ -1,0 +1,4 @@
+SELECT MONTH(created_at) AS THANG, YEAR(created_at) AS NAM, ROUND(SUM(total),2) AS DOANHTHU
+		FROM orders as O
+		WHERE DATE(O.created_at)>= ngaybatdau AND DATE(O.created_at)<= ngayketthuc AND status != '4'
+		GROUP BY MONTH(created_at)

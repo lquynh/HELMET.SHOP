@@ -1,0 +1,14 @@
+SELECT C.cate_code, C.name AS cate_name, P.product_code, P.name, ifnull(L.QI,0)AS tongnhap, ifnull(X.QO,0) AS tongxuat, (ifnull(L.QI,0) - ifnull(X.QO,0)) AS tonkho
+FROM products P 
+
+LEFT JOIN (select OD.product_code PC, SUM(quantity_out) QO FROM orders_detail OD WHERE id_order in 
+           (select id from orders AS O where DATE(O.created_at) <= ngaybatdau and O.status != '4')
+           GROUP BY OD.product_code) X on  P.product_code = PC 
+           
+LEFT JOIN (select IDT.product_code PI, SUM(quantity_in) QI FROM import_detail IDT WHERE import_code in 
+           (select import_code from import AS I where DATE(I.created_at) <= ngaybatdau)
+           GROUP BY IDT.product_code) L on P.product_code = PI
+           
+INNER JOIN categories C 
+ON P.cate_code = C.cate_code
+ORDER BY C.cate_code, P.product_code

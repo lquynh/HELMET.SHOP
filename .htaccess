@@ -1,0 +1,21 @@
+RewriteEngine on
+
+RewriteRule ^([a-zA-Z0-9-().]+)-([0-9]+)$ detail.php?alias=$1&id=$2
+RewriteRule ^([a-zA-Z0-9-()]+)$ detail.php?alias=$1
+
+RewriteRule ^([0-9]+)$ type.php?type=$1
+
+
+
+RewriteRule ^index.html$ index.php
+RewriteRule ^trang-chu$ index.php
+RewriteRule ^404.apsx$ 404.php
+
+RewriteRule ^login.html$ signup.php
+RewriteRule ^search.html$ search.php
+ErrorDocument 404 /shop_helmet/404.php
+ErrorDocument 500 /shop_helmet/404.php
+
+
+# this is cmt
+
